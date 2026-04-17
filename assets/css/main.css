@@ -1,0 +1,348 @@
+/* ============================================
+   JardiLock — Global Styles
+   ============================================ */
+
+/* ===== RESET ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: auto !important;
+}
+
+/* Remove default iOS/Android tap highlight flash on touch interactions. */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Keep keyboard focus styles on desktop, but suppress mobile touch focus ring flash. */
+@media (hover: none) and (pointer: coarse) {
+  a:focus,
+  button:focus,
+  input:focus,
+  select:focus,
+  textarea:focus,
+  [role='button']:focus,
+  [tabindex]:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+/* ===== CSS VARIABLES ===== */
+:root {
+  /* Brand — rouge/corail inspired by example site */
+  --color-primary: #e12c42;
+  --color-primary-dark: #c42739;
+  --color-primary-light: #f04e5e;
+  --color-secondary: #e12c42;
+  --color-accent: #f8bb86;
+  --color-accent-light: #fef0ef;
+
+  /* Backgrounds */
+  --color-bg: #ffffff;
+  --color-bg-alt: #fafafa;
+  --color-bg-dark: #f5f5f5;
+
+  /* Text */
+  --color-text: #1b1b1b;
+  --color-text-light: #6b7280;
+  --color-text-muted: #9ca3af;
+
+  /* Borders */
+  --color-border: rgba(0, 0, 0, 0.12);
+
+  /* Status */
+  --color-danger: #dc2626;
+  --color-danger-light: #fef2f2;
+  --color-success: #2ecc71;
+  --color-warning: #f59e0b;
+
+  /* Typography — Nunito */
+  --font-sans: 'Nunito', Helvetica, Arial, sans-serif;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semi-bold: 600;
+  --font-weight-bold: 700;
+
+  /* Radii — tighter, Material-inspired */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 6px;
+  --radius-pill: var(--btn-radius-pill);
+
+  /* Shadows — Material Design style */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+
+  /* Spacing scale (4px base) */
+  --space-1: 0.25rem;   /*  4px */
+  --space-2: 0.5rem;    /*  8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+
+  /* Buttons */
+  --btn-height: 36px;
+  --btn-height-sm: var(--btn-height);
+  --btn-height-touch: 40px;
+  --btn-height-field: 30px;
+  --input-height: 42px;
+  --btn-radius-pill: 999px;
+  --btn-radius-soft: 10px;
+  --btn-radius-round: 50%;
+  --btn-padding-inline-sm: 0.75rem;
+  --btn-padding-inline-md: 1.25rem;
+  --btn-padding-inline-lg: 1.75rem;
+  --btn-padding-inline-pill: 0.9rem;
+  --btn-gap: 0.5rem;
+  --btn-gap-pill: 0.45rem;
+  --btn-disabled-opacity: 0.48;
+  --btn-focus-ring: 0 0 0 3px rgba(225, 44, 66, 0.08);
+  --btn-surface-hover-bg: #e8e9ec;
+  --btn-surface-hover-border: #b0b3bc;
+  --btn-surface-dark-bg: rgba(10, 12, 18, 0.72);
+  --btn-surface-dark-bg-hover: rgba(20, 24, 34, 0.88);
+  --btn-surface-dark-border: rgba(255, 255, 255, 0.16);
+
+  /* Catalog overlay feedback */
+  --catalog-overlay-active-transition-duration: 1000ms;
+  --catalog-overlay-active-transition-easing: ease;
+  --catalog-overlay-card-active-opacity: 0;
+  --catalog-overlay-map-active-opacity: 0;
+  --catalog-map-tile-brightness: 0.9;
+
+  /* Dividers */
+  --divider-color: var(--color-border);
+  --divider-weight: 1px;
+
+  /* Layout */
+  --header-height: 57px;
+  --content-max-width: 1128px;
+  --page-gutter-desktop: 2rem;
+  --page-gutter-mobile: 1rem;
+  --page-gutter: var(--page-gutter-desktop);
+  --page-gutter-safe-inline-start: max(var(--page-gutter), env(safe-area-inset-left));
+  --page-gutter-safe-inline-end: max(var(--page-gutter), env(safe-area-inset-right));
+  /* Vue Datepicker */
+  --dp-border-radius: 20px;
+
+  /* Floating panels */
+  --floating-offset: var(--space-4);
+  --floating-offset-compact: var(--space-3);
+  --floating-toolbar-gap: var(--space-2);
+  --floating-panel-radius: 24px;
+  --floating-panel-border: 1px solid var(--color-border);
+  --floating-panel-shadow: var(--shadow-lg);
+  --floating-surface-fade-top: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.92) 72%, rgba(255, 255, 255, 0) 100%);
+  --floating-surface-fade-bottom: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.92) 72%, rgba(255, 255, 255, 0) 100%);
+
+  /* Catalog layout */
+  --catalog-control-gap: var(--space-3);
+  --catalog-sidebar-padding-inline: var(--space-8);
+
+  /* Layering */
+  --z-surface-base: 0;
+  --z-surface-raised: 2;
+  --z-surface-stacked: 3;
+  --z-surface-floating: 4;
+  --z-surface-scroll-track: 12;
+  --z-surface-dropdown: 30;
+  --z-catalog-bottom-bar: 33;
+  --z-catalog-toolbar: 35;
+  --z-map-overlay: 500;
+  --z-overlay-shell: 220;
+  --z-time-picker-overlay: 1000;
+  --z-header: 2400;
+  --z-header-popover: 2410;
+}
+
+/* ===== BASE ===== */
+body {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+h1, h2, h3, h4 {
+  line-height: 1.2;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+}
+
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.1rem; }
+
+input, select, textarea, button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* ===== UTILITIES ===== */
+.container {
+  margin: 0 auto;
+  padding-left: var(--page-gutter-safe-inline-start);
+  padding-right: var(--page-gutter-safe-inline-end);
+}
+
+.page {
+  min-height: calc(100vh - var(--header-height) - 200px);
+  padding: 2rem 0;
+}
+
+.page-title {
+  margin-bottom: 1.5rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== LIST TRANSITIONS (TransitionGroup) ===== */
+.list-enter-active {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.list-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: absolute;
+}
+
+.list-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.list-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.list-move {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== SLIDE-UP TRANSITIONS ===== */
+.slide-up-enter-active {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-up-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* ===== VUE DATEPICKER ===== */
+.dp__menu,
+.dp__menu_inner,
+.dp__theme_light,
+.dp__theme_dark {
+  border-radius: var(--floating-panel-radius) !important;
+}
+
+.dp__menu,
+.dp__menu_inner {
+  overflow: hidden !important;
+}
+
+.dp__menu {
+  border: var(--floating-panel-border) !important;
+  box-shadow: var(--floating-panel-shadow) !important;
+  background: var(--color-bg) !important;
+}
+
+.dp__menu_inner {
+  background: var(--color-bg) !important;
+}
+
+#catalog-date-menu:not([data-catalog-position-ready='true']) {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Teleported Datepicker menu must be styled globally (not from scoped component styles). */
+#catalog-date-menu .dp__calendar_header,
+#catalog-date-menu .dp__calendar_row {
+  margin-inline: 0 !important;
+}
+
+#catalog-date-menu .dp__calendar_header_item,
+#catalog-date-menu .dp__calendar_item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding-inline: 0 !important;
+}
+
+#catalog-date-menu .dp__cell_inner {
+  margin-inline: auto !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  :root {
+    --page-gutter: var(--page-gutter-mobile);
+  }
+
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.4rem; }
+  h3 { font-size: 1.15rem; }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+}
