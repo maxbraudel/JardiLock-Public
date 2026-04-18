@@ -61,7 +61,7 @@ const resolvedShape = computed(() => (props.authenticated ? 'pill' : 'round'))
 .ui-user-menu-button.is-auth {
   --ui-button-height: var(--btn-height);
   --ui-button-gap: 0.55rem;
-  padding-inline-start: 0.3rem;
+  padding-inline-start: 0.2rem;
   padding-inline-end: var(--btn-padding-inline-pill);
 }
 
