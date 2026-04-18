@@ -41,22 +41,12 @@ Pour la verification fonctionnelle du module de connexion, le compte de demonstr
 
 ## Lancer le projet
 
-Le projet est compose de deux parties :
-
-- un frontend Nuxt dans [package.json](package.json) ;
-
 ### 1. Installer les dependances
 
-
-```bash
-cd server
-npm install
-```
 
 Depuis [package.json](package.json) :
 
 ```bash
-cd website
 npm install
 ```
 
@@ -77,10 +67,10 @@ Pour produire une build du frontend :
 npm run build
 ```
 
-Puis, pour la previsualiser localement :
+Pour lancer le serveur du build :
 
 ```bash
-npm run preview
+npm run start
 ```
 
 ## Ce qui fait la valeur du projet
@@ -209,8 +199,9 @@ Cette section liste les services utilises par ordre d'importance dans le projet.
 
 ## 1. API interne JardiLock
 
-Il s'agit de l'API principale du projet, developpee specifiquement pour JardiLock.
+Le projet utilise une API hébergée sur mon serveur linux : `https:jardilock-api.maxbraudel.com`
 
+Il s'agit de l'API principale du projet, developpee specifiquement pour JardiLock.
 
 Principales routes et usages :
 
@@ -229,9 +220,7 @@ Principales routes et usages :
 - `GET /api/public-holidays` : jours feries utilises dans la logique de disponibilite ;
 - `GET /api/health` : verification simple de l'etat du serveur.
 
-## 2. Service interne d'image JardiLock
-
-Il s'agit aussi d'un service maison, gere par le backend du projet à l'adresse `https:jardilock-api.maxbraudel.com`
+La database d'images est géree par le serveur maison également.
 
 Principale requete et usage :
 
@@ -303,13 +292,6 @@ Le mobile n'a pas ete traite comme une simple adaptation du desktop. Les interac
 ## Structure technique de la codebase
 
 ## Vue d'ensemble
-
-La racine du projet est organisee ainsi :
-
-- [documents/cours et consignes.md](documents/cours%20et%20consignes.md) : document de cours et de consignes ;
-- [package.json](package.json) : frontend Nuxt, catalogue, carte, overlays, UI.
-
-## Frontend
 
 Le frontend est organise autour de plusieurs niveaux clairs.
 
