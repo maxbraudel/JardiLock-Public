@@ -1,6 +1,6 @@
 # JardiLock
 
-### [https:jardilock-api.maxbraudel.com]([https:jardilock-api.maxbraudel.com])
+### [https://jardilock.maxbraudel.com]([https://jardilock.maxbraudel.com])
 
 ## Important
 
