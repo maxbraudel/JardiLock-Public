@@ -95,6 +95,7 @@ function toggleDay(day: number) {
       <UiInput
         label="Superficie min. (m²)"
         type="number"
+        clearable
         :model-value="modelValue.minArea || ''"
         placeholder="0"
         min="0"
@@ -107,6 +108,7 @@ function toggleDay(day: number) {
       <UiInput
         label="Prix max. (€)"
         type="number"
+        clearable
         :model-value="modelValue.maxPrice < Infinity ? modelValue.maxPrice / 100 : ''"
         placeholder="Illimité"
         min="0"

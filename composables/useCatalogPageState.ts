@@ -42,6 +42,8 @@ type CatalogPageStateOptions = {
   sortOrder: { value: ListingSortOrder }
 }
 
+type ScrollInset = string | number
+
 function getDefaultCatalogFilters(): CatalogFiltersState {
   return {
     minArea: 0,
@@ -72,6 +74,7 @@ export function useCatalogPageState(options: CatalogPageStateOptions) {
   const catalogViewMode = useState<'catalog' | 'map'>(APP_STATE_KEYS.catalogViewMode, () => 'catalog')
 
   const isMobileViewport = ref(false)
+  const sidebarFloatingActionsRef = ref<HTMLElement | null>(null)
   const toolbarRef = ref<HTMLElement | null>(null)
   const bottomBarRef = ref<HTMLElement | null>(null)
   const mapShellRef = ref<HTMLElement | null>(null)
@@ -79,6 +82,7 @@ export function useCatalogPageState(options: CatalogPageStateOptions) {
   const listingGridRef = ref<ListingGridController | null>(null)
   const resultsContainer = ref<ResultsContainerController | null>(null)
   const showScrollToTop = ref(false)
+  const catalogSidebarFloatingActionsHeight = ref(0)
   const catalogToolbarHeight = ref(0)
   const catalogBottomBarHeight = ref(0)
   const mapViewportInsets = ref({ top: 0, bottom: 0 })
@@ -91,15 +95,34 @@ export function useCatalogPageState(options: CatalogPageStateOptions) {
   const isMapView = computed(() => catalogViewMode.value === 'map')
   const shouldMountMap = computed(() => hasMapBeenActivated.value || isMapView.value)
   const catalogViewToggleLabel = computed(() => (isMapView.value ? 'Catalogue' : 'Carte'))
+  const catalogResultsTopInset = computed<ScrollInset>(() => {
+    return catalogToolbarHeight.value > 0 ? catalogToolbarHeight.value : 'var(--catalog-toolbar-height)'
+  })
+  const catalogResultsBottomInset = computed<ScrollInset>(() => {
+    return catalogBottomBarHeight.value > 0 ? catalogBottomBarHeight.value : 'var(--catalog-bottom-bar-height)'
+  })
+  const catalogSidebarTopInset = computed<ScrollInset>(() => {
+    return catalogSidebarFloatingActionsHeight.value > 0
+      ? catalogSidebarFloatingActionsHeight.value
+      : 'calc(var(--btn-height) + (var(--floating-offset) * 2))'
+  })
 
   const catalogMainStyle = computed(() => {
-    if (catalogToolbarHeight.value <= 0) {
+    const style: Record<string, string> = {}
+
+    if (catalogToolbarHeight.value > 0) {
+      style['--catalog-toolbar-height'] = `${catalogToolbarHeight.value}px`
+    }
+
+    if (catalogBottomBarHeight.value > 0) {
+      style['--catalog-bottom-bar-height'] = `${catalogBottomBarHeight.value}px`
+    }
+
+    if (Object.keys(style).length === 0) {
       return undefined
     }
 
-    return {
-      '--catalog-toolbar-height': `${catalogToolbarHeight.value}px`
-    }
+    return style
   })
 
   const activeFilterCount = computed(() => {
@@ -149,6 +172,12 @@ export function useCatalogPageState(options: CatalogPageStateOptions) {
       : 0
   }
 
+  function updateCatalogSidebarFloatingActionsHeight() {
+    catalogSidebarFloatingActionsHeight.value = sidebarFloatingActionsRef.value
+      ? Math.ceil(sidebarFloatingActionsRef.value.getBoundingClientRect().height)
+      : 0
+  }
+
   function updateCatalogBottomBarHeight() {
     catalogBottomBarHeight.value = bottomBarRef.value
       ? Math.ceil(bottomBarRef.value.getBoundingClientRect().height)
@@ -172,6 +201,7 @@ export function useCatalogPageState(options: CatalogPageStateOptions) {
   }
 
   function updateCatalogLayoutMetrics() {
+    updateCatalogSidebarFloatingActionsHeight()
     updateCatalogToolbarHeight()
     updateCatalogBottomBarHeight()
     updateMapViewportInsets()
@@ -203,6 +233,10 @@ export function useCatalogPageState(options: CatalogPageStateOptions) {
 
     if (toolbarRef.value) {
       layoutResizeObserver.observe(toolbarRef.value)
+    }
+
+    if (sidebarFloatingActionsRef.value) {
+      layoutResizeObserver.observe(sidebarFloatingActionsRef.value)
     }
 
     if (bottomBarRef.value) {
@@ -298,6 +332,10 @@ export function useCatalogPageState(options: CatalogPageStateOptions) {
     })
   })
 
+  watch(desktopFiltersVisible, () => {
+    scheduleCatalogLayoutMetricsUpdate()
+  })
+
   watch(
     options.sortedListings,
     (listings) => {
@@ -339,6 +377,9 @@ export function useCatalogPageState(options: CatalogPageStateOptions) {
     activeFilterCount,
     bottomBarRef,
     catalogMainStyle,
+    catalogResultsBottomInset,
+    catalogResultsTopInset,
+    catalogSidebarTopInset,
     catalogViewToggleLabel,
     clearAllFilters,
     closeDesktopFilters,
@@ -360,6 +401,7 @@ export function useCatalogPageState(options: CatalogPageStateOptions) {
     shouldMountMap,
     showDesktopFilters,
     showScrollToTop,
+    sidebarFloatingActionsRef,
     sidebarResultLabel,
     toggleCatalogViewMode,
     toolbarRef,

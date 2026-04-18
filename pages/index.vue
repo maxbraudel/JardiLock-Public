@@ -25,7 +25,6 @@ const exampleHighlights = [
       <div class="landing-shell">
         <section class="hero-section">
           <div class="hero-copy">
-            <UiBadge tone="muted" size="md">Catalogue de location de jardins</UiBadge>
             <h1 class="hero-title">Louez un jardin simplement pour profiter d'un vrai moment dehors.</h1>
             <p class="hero-text">
               JardiLock rassemble des jardins privés à louer pour un anniversaire, un repas au soleil
@@ -72,7 +71,7 @@ const exampleHighlights = [
 <style scoped>
 .landing-page {
   min-height: calc(100vh - var(--header-height));
-  padding: clamp(2.5rem, 5vw, 5rem) 0 0;
+  padding: clamp(2.5rem, 5vw, 5rem) 0;
   background:
     radial-gradient(circle at top left, rgba(248, 187, 134, 0.28), transparent 28%),
     radial-gradient(circle at right 15%, rgba(225, 44, 66, 0.08), transparent 24%),
@@ -202,6 +201,8 @@ const exampleHighlights = [
 @media (max-width: 900px) {
   .hero-section {
     grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
   }
 
   .hero-title,
@@ -216,9 +217,15 @@ const exampleHighlights = [
   .benefits-section {
     grid-template-columns: 1fr;
   }
+
+  .hero-copy {
+    align-items: center;
+    display: flex;
+  }
 }
 
 @media (max-width: 640px) {
+  
   .landing-page {
     padding-top: var(--space-8);
   }

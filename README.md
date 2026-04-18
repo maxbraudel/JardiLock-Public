@@ -60,23 +60,8 @@ cd website
 npm install
 ```
 
-### 2. Configurer les variables d'environnement
-
-Cote serveur, une variable `JWT_SECRET` est attendue dans le fichier d'environnement du serveur.
-
-Le frontend pointe par defaut vers l'API sur `http://127.0.0.1:3001`, comme defini dans [nuxt.config.ts](nuxt.config.ts).
-
-### 3. Lancer l'API
-
-Depuis le dossier `server` :
-
-```bash
-npm run dev
-```
 
 ### 4. Lancer le site web
-
-Depuis le dossier `website` :
 
 ```bash
 npm run dev
@@ -89,7 +74,6 @@ Le site Nuxt demarre par defaut sur le port `3000`.
 Pour produire une build du frontend :
 
 ```bash
-cd website
 npm run build
 ```
 

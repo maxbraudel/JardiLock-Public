@@ -41,7 +41,7 @@ const frameClasses = computed(() => ({
   gap: 0.5rem;
   min-width: 0;
   min-height: var(--input-height);
-  padding: 0 0.875rem;
+  padding: 0 0.15rem 0 0.875rem;
   box-sizing: border-box;
   background: var(--color-bg);
   border: 1px solid var(--color-border);

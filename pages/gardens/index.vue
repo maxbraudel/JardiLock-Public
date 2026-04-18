@@ -74,6 +74,9 @@ const {
   activeFilterCount,
   bottomBarRef,
   catalogMainStyle,
+  catalogResultsBottomInset,
+  catalogResultsTopInset,
+  catalogSidebarTopInset,
   catalogViewToggleLabel,
   clearAllFilters,
   closeDesktopFilters,
@@ -95,6 +98,7 @@ const {
   shouldMountMap,
   showDesktopFilters,
   showScrollToTop,
+  sidebarFloatingActionsRef,
   sidebarResultLabel,
   toggleCatalogViewMode,
   toolbarRef,
@@ -114,7 +118,7 @@ const {
 <template>
   <div class="catalog-page" :class="{ 'catalog-page--filters-collapsed': isDesktopFiltersCollapsed }">
     <aside v-show="showDesktopFilters" class="catalog-sidebar-shell">
-      <div class="catalog-sidebar-floating-actions">
+      <div ref="sidebarFloatingActionsRef" class="catalog-sidebar-floating-actions">
         <div
           class="catalog-sidebar-primary-actions"
           :class="{ 'catalog-sidebar-primary-actions--single': activeFilterCount === 0 }"
@@ -152,7 +156,13 @@ const {
         </UiIconButton>
       </div>
 
-      <UiScrollContainer class="catalog-sidebar">
+      <UiScrollContainer
+        class="catalog-sidebar"
+        :top-inset-scrollbar="catalogSidebarTopInset"
+        bottom-inset-scrollbar="var(--floating-offset)"
+        :top-inset-content="catalogSidebarTopInset"
+        bottom-inset-content="var(--floating-offset)"
+      >
         <div class="catalog-sidebar-content">
         <ListingFilters
           aria-label="Filtres catalogue"
@@ -186,6 +196,10 @@ const {
         v-show="!isMapView"
         ref="resultsContainer"
         class="catalog-results"
+        :top-inset-scrollbar="catalogResultsTopInset"
+        :bottom-inset-scrollbar="catalogResultsBottomInset"
+        :top-inset-content="catalogResultsTopInset"
+        :bottom-inset-content="catalogResultsBottomInset"
         @scroll="handleResultsScroll"
       >
         <div class="catalog-results-content">
@@ -195,8 +209,6 @@ const {
             :loading="loading"
             :error="error"
           />
-
-          <div v-if="sortedListings.length > 0" class="catalog-results-end-spacer" aria-hidden="true"></div>
         </div>
       </UiScrollContainer>
 
@@ -331,7 +343,11 @@ const {
           </UiIconButton>
         </div>
 
-        <UiScrollContainer class="mobile-filter-scroll">
+        <UiScrollContainer
+          class="mobile-filter-scroll"
+          bottom-inset-scrollbar="calc(var(--space-5) + env(safe-area-inset-bottom))"
+          bottom-inset-content="calc(var(--space-5) + env(safe-area-inset-bottom))"
+        >
           <div class="mobile-filter-view">
             <ListingFilters
               v-model="catalogFilters"
@@ -369,16 +385,12 @@ const {
   height: 100%;
   min-height: 0;
   padding: 0;
-  --catalog-sidebar-inset-block: var(--floating-offset);
-  --catalog-sidebar-floating-top-inset: calc(var(--btn-height) + (var(--floating-offset) * 2));
-  --ui-scroll-track-top-offset: var(--catalog-sidebar-floating-top-inset);
-  --ui-scroll-track-bottom-offset: var(--catalog-sidebar-inset-block);
 }
 
 .catalog-sidebar-content {
   min-height: 100%;
   box-sizing: border-box;
-  padding: var(--catalog-sidebar-floating-top-inset) var(--catalog-sidebar-padding-inline) var(--floating-offset);
+  padding: 0 var(--catalog-sidebar-padding-inline);
 }
 
 .catalog-sidebar-floating-actions {
@@ -465,8 +477,8 @@ const {
   overflow: hidden;
   border-left: 1px solid var(--color-border);
   --catalog-toolbar-height: calc(var(--input-height) + (var(--space-4) * 2));
-  --catalog-floating-bottom-offset: calc(var(--floating-offset) + var(--space-2));
-  --catalog-floating-bottom-clearance: calc(var(--btn-height) + var(--catalog-floating-bottom-offset) + var(--space-8));
+  --catalog-bottom-bar-padding-bottom: var(--floating-offset);
+  --catalog-bottom-bar-height: calc(var(--btn-height) + var(--floating-offset) + var(--catalog-bottom-bar-padding-bottom));
 }
 
 .catalog-page--filters-collapsed .catalog-main {
@@ -508,7 +520,7 @@ const {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: var(--floating-offset) var(--page-gutter-safe-inline-end) var(--floating-offset) var(--page-gutter-safe-inline-start);
+  padding: var(--floating-offset) var(--page-gutter-safe-inline-end) var(--catalog-bottom-bar-padding-bottom) var(--page-gutter-safe-inline-start);
   z-index: var(--z-catalog-bottom-bar);
   box-sizing: border-box;
   display: grid;
@@ -568,23 +580,6 @@ const {
   position: relative;
   min-height: 0;
   padding: 0;
-  --catalog-results-top-inset: calc(var(--catalog-toolbar-height) + var(--floating-offset));
-  --catalog-results-bottom-inset: max(var(--space-8), var(--catalog-floating-bottom-clearance));
-  --catalog-results-track-bottom-inset: max(var(--floating-offset), var(--catalog-floating-bottom-clearance));
-  --ui-scroll-track-top-offset: var(--catalog-results-top-inset);
-  --ui-scroll-track-bottom-offset: var(--catalog-results-track-bottom-inset);
-}
-
-.catalog-results :deep(.ui-scroll-viewport) {
-  display: flex;
-  flex-direction: column;
-}
-
-.catalog-results :deep(.ui-scroll-content) {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-height: 100%;
 }
 
 .catalog-scroll-top-icon {
@@ -595,17 +590,10 @@ const {
 
 .catalog-results-content {
   display: flex;
-  flex: 1;
   min-height: 100%;
   flex-direction: column;
   box-sizing: border-box;
-  padding: var(--catalog-results-top-inset) var(--page-gutter-safe-inline-end) 0 var(--page-gutter-safe-inline-start);
-}
-
-.catalog-results-end-spacer {
-  flex: 0 0 var(--catalog-results-bottom-inset);
-  height: var(--catalog-results-bottom-inset);
-  width: 100%;
+  padding: 0 var(--page-gutter-safe-inline-end) 0 var(--page-gutter-safe-inline-start);
 }
 
 .catalog-map-shell {
@@ -627,8 +615,6 @@ const {
   .catalog-page {
     grid-template-columns: 1fr;
     height: calc(100dvh - var(--header-height));
-    --catalog-mobile-floating-bottom-offset: max(var(--floating-offset), env(safe-area-inset-bottom));
-    --catalog-mobile-floating-bottom-clearance: calc(var(--btn-height) + var(--catalog-mobile-floating-bottom-offset) + var(--space-8));
   }
 
   .catalog-sidebar {
@@ -642,6 +628,7 @@ const {
   .catalog-main {
     border-left: none;
     --catalog-toolbar-height: calc(var(--input-height) + var(--btn-height) + (var(--space-3) * 2));
+    --catalog-bottom-bar-padding-bottom: max(var(--floating-offset), env(safe-area-inset-bottom));
   }
 
   .catalog-toolbar {
@@ -651,7 +638,7 @@ const {
     top: var(--header-height);
     left: 0;
     right: 0;
-    padding: var(--floating-offset-compact) var(--page-gutter-safe-inline-end) 0 var(--page-gutter-safe-inline-start);
+    padding: var(--floating-offset-compact) var(--page-gutter-safe-inline-end) var(--floating-offset-compact) var(--page-gutter-safe-inline-start);
   }
 
   .catalog-toolbar :deep(.sort-bar) {
@@ -663,20 +650,8 @@ const {
     order: 2;
   }
 
-  .catalog-results {
-    flex: 1;
-    min-height: 0;
-    padding: 0;
-    --catalog-results-bottom-inset: max(calc(var(--space-16) + env(safe-area-inset-bottom)), var(--catalog-mobile-floating-bottom-clearance));
-    --catalog-results-track-bottom-inset: var(--catalog-results-bottom-inset);
-  }
-
-  .catalog-results-content {
-    padding: var(--catalog-results-top-inset) var(--page-gutter-safe-inline-end) 0 var(--page-gutter-safe-inline-start);
-  }
-
   .catalog-map-shell {
-    padding: var(--catalog-toolbar-height) var(--page-gutter-safe-inline-end) var(--catalog-results-bottom-inset) var(--page-gutter-safe-inline-start);
+    padding: var(--catalog-toolbar-height) var(--page-gutter-safe-inline-end) var(--catalog-bottom-bar-height) var(--page-gutter-safe-inline-start);
   }
 
   .catalog-bottom-bar {
@@ -738,13 +713,12 @@ const {
     height: 100%;
     min-height: 0;
     padding: 0;
-    --ui-scroll-track-bottom-offset: var(--space-4);
   }
 
   .mobile-filter-view {
     min-height: 100%;
     box-sizing: border-box;
-    padding: var(--floating-offset) var(--page-gutter-safe-inline-end) calc(var(--space-5) + env(safe-area-inset-bottom)) var(--page-gutter-safe-inline-start);
+    padding: var(--floating-offset) var(--page-gutter-safe-inline-end) 0 var(--page-gutter-safe-inline-start);
   }
 }
 

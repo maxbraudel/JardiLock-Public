@@ -7,6 +7,8 @@ const props = defineProps({
   type: { type: String, default: 'text' },
   placeholder: { type: String, default: '' },
   autocomplete: { type: String, default: undefined },
+  clearable: { type: Boolean, default: false },
+  clearLabel: { type: String, default: '' },
   error: { type: String, default: '' },
   required: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
@@ -15,11 +17,20 @@ const props = defineProps({
   step: { type: [String, Number], default: undefined }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'clear'])
 
 const inputId = computed(() =>
   `input-${(props.label || props.placeholder || Math.random().toString(36).slice(2)).toLowerCase().replace(/\s+/g, '-')}`
 )
+
+const hasValue = computed(() => props.modelValue !== '' && props.modelValue !== null && props.modelValue !== undefined)
+const showClearButton = computed(() => props.clearable && hasValue.value)
+const resolvedClearLabel = computed(() => props.clearLabel || (props.label ? `Effacer ${props.label}` : 'Effacer'))
+
+function handleClear() {
+  emit('update:modelValue', '')
+  emit('clear')
+}
 </script>
 
 <template>
@@ -48,8 +59,17 @@ const inputId = computed(() =>
         @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
       />
 
-      <template v-if="$slots.trailing" #trailing>
-        <slot name="trailing" />
+      <template v-if="showClearButton || $slots.trailing" #trailing>
+        <div class="ui-input__actions">
+          <UiFieldClearButton
+            v-if="showClearButton"
+            class="ui-input__clear"
+            :label="resolvedClearLabel"
+            :disabled="disabled"
+            @click="handleClear"
+          />
+          <slot name="trailing" />
+        </div>
       </template>
     </UiInputFrame>
 
@@ -95,6 +115,16 @@ const inputId = computed(() =>
 
 .ui-input__field:disabled {
   cursor: not-allowed;
+}
+
+.ui-input__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ui-input__clear {
+  flex-shrink: 0;
 }
 
 /* Remove number input arrows */

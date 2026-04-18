@@ -19,6 +19,10 @@ const props = defineProps({
   floatingCloseResponsiveIconOnly: { type: Boolean, default: false },
   scrollOnPanel: { type: Boolean, default: false },
   useScrollContainer: { type: Boolean, default: true },
+  scrollTopInsetScrollbar: { type: [String, Number], default: 0 },
+  scrollBottomInsetScrollbar: { type: [String, Number], default: 0 },
+  scrollTopInsetContent: { type: [String, Number], default: 0 },
+  scrollBottomInsetContent: { type: [String, Number], default: 0 },
   fullBleed: { type: Boolean, default: false },
   coverViewport: { type: Boolean, default: false },
   transparentBackdrop: { type: Boolean, default: false }
@@ -138,6 +142,10 @@ defineExpose({
             v-if="useScrollContainer"
             ref="scrollContainerRef"
             class="modal-body-scroll"
+            :top-inset-scrollbar="props.scrollTopInsetScrollbar"
+            :bottom-inset-scrollbar="props.scrollBottomInsetScrollbar"
+            :top-inset-content="props.scrollTopInsetContent"
+            :bottom-inset-content="props.scrollBottomInsetContent"
           >
             <slot />
           </UiScrollContainer>

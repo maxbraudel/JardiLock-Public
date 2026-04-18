@@ -26,7 +26,6 @@ const currentYear = computed(() => new Date().getFullYear())
 
 <style scoped>
 .app-footer {
-  margin-top: var(--space-16);
   padding: var(--space-10) 0 var(--space-8);
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   background: linear-gradient(180deg, rgba(250, 250, 250, 0.95), rgba(255, 255, 255, 1));

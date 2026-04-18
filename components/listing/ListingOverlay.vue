@@ -185,6 +185,10 @@ watch(
   <UiModalShell
     ref="modalRef"
     panel-class="listing-modal-panel"
+    scroll-top-inset-scrollbar="var(--listing-overlay-scroll-top-inset-scrollbar)"
+    scroll-bottom-inset-scrollbar="var(--listing-overlay-scroll-bottom-inset-scrollbar)"
+    scroll-top-inset-content="0"
+    scroll-bottom-inset-content="var(--listing-overlay-scroll-bottom-inset-content)"
     hide-header
     floating-close
     floating-close-label="Fermer l'annonce"
@@ -353,14 +357,17 @@ watch(
 
 <style>
 .listing-modal-panel {
-  --listing-overlay-scroll-track-top-offset: calc(var(--btn-height) + (var(--space-4) * 2));
-  --ui-scroll-track-top-offset: var(--listing-overlay-scroll-track-top-offset);
-  --ui-scroll-track-bottom-offset: 3rem;
+  --listing-overlay-scroll-top-inset-scrollbar: calc(var(--btn-height) + (var(--space-4) * 2));
+  --listing-overlay-scroll-bottom-inset-scrollbar: 3rem;
+  --listing-overlay-scroll-bottom-inset-content: 3rem;
 }
 
 @media (max-width: 1024px) {
   .listing-modal-panel {
-    --ui-scroll-track-bottom-offset: calc(
+    --listing-overlay-scroll-bottom-inset-scrollbar: calc(
+      (var(--btn-height) * 2) + (var(--space-4) * 2) + 0.75rem + env(safe-area-inset-bottom)
+    );
+    --listing-overlay-scroll-bottom-inset-content: calc(
       (var(--btn-height) * 2) + (var(--space-4) * 2) + 0.75rem + env(safe-area-inset-bottom)
     );
   }
@@ -368,7 +375,7 @@ watch(
 
 @media (max-width: 768px) {
   .listing-modal-panel {
-    --listing-overlay-scroll-track-top-offset: calc(var(--btn-height-touch) + (var(--space-3) * 2));
+    --listing-overlay-scroll-top-inset-scrollbar: calc(var(--btn-height-touch) + (var(--space-3) * 2));
   }
 }
 </style>

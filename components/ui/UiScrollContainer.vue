@@ -7,9 +7,22 @@ type ScrollMetrics = {
   clientHeight: number
 }
 
-const props = defineProps({
-  minThumbSize: { type: Number, default: 32 },
-  fill: { type: Boolean, default: true }
+type ScrollInset = string | number
+
+const props = withDefaults(defineProps<{
+  minThumbSize?: number
+  fill?: boolean
+  topInsetScrollbar?: ScrollInset
+  bottomInsetScrollbar?: ScrollInset
+  topInsetContent?: ScrollInset
+  bottomInsetContent?: ScrollInset
+}>(), {
+  minThumbSize: 32,
+  fill: true,
+  topInsetScrollbar: 0,
+  bottomInsetScrollbar: 0,
+  topInsetContent: 0,
+  bottomInsetContent: 0
 })
 
 const emit = defineEmits<{
@@ -64,6 +77,28 @@ const thumbAvailableHeight = computed(() => {
 const showScrollbar = computed(() => {
   return isScrollable.value && (isDragging.value || isScrolling.value || isTrackHovered.value)
 })
+
+function normalizeInset(value: ScrollInset) {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? `${value}px` : '0px'
+  }
+
+  const trimmedValue = value.trim()
+  return trimmedValue.length > 0 ? trimmedValue : '0px'
+}
+
+const normalizedTopInsetScrollbar = computed(() => normalizeInset(props.topInsetScrollbar))
+const normalizedBottomInsetScrollbar = computed(() => normalizeInset(props.bottomInsetScrollbar))
+const normalizedTopInsetContent = computed(() => normalizeInset(props.topInsetContent))
+const normalizedBottomInsetContent = computed(() => normalizeInset(props.bottomInsetContent))
+const scrollContentStyle = computed(() => ({
+  paddingTop: normalizedTopInsetContent.value,
+  paddingBottom: normalizedBottomInsetContent.value
+}))
+const scrollTrackStyle = computed(() => ({
+  top: normalizedTopInsetScrollbar.value,
+  bottom: normalizedBottomInsetScrollbar.value
+}))
 
 const thumbHeight = computed(() => {
   if (!isScrollable.value || thumbAvailableHeight.value <= 0) return 0
@@ -437,7 +472,7 @@ defineExpose({
       @pointerdown="cancelSmoothScroll"
       @scroll.passive="handleScroll"
     >
-      <div ref="contentRef" class="ui-scroll-content">
+      <div ref="contentRef" class="ui-scroll-content" :style="scrollContentStyle">
         <slot />
       </div>
     </div>
@@ -445,6 +480,7 @@ defineExpose({
     <div
       v-show="isScrollable"
       class="ui-scroll-track-container"
+      :style="scrollTrackStyle"
       @pointerdown.self.prevent="handleTrackPointerDown"
     >
       <div
@@ -499,14 +535,13 @@ defineExpose({
 }
 
 .ui-scroll-content {
+  box-sizing: border-box;
   min-height: 100%;
 }
 
 .ui-scroll-track-container {
   position: absolute;
-  top: var(--ui-scroll-track-top-offset, 0px);
   right: 0;
-  bottom: var(--ui-scroll-track-bottom-offset, 0px);
   width: 2rem;
   display: flex;
   align-items: stretch;
@@ -514,7 +549,7 @@ defineExpose({
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.18s ease;
-  z-index: 12;
+  z-index: var(--z-surface-scroll-track);
 }
 
 .ui-scroll-track {

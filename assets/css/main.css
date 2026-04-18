@@ -100,7 +100,7 @@ html {
   --btn-height-sm: var(--btn-height);
   --btn-height-touch: 40px;
   --btn-height-field: 30px;
-  --input-height: 42px;
+  --input-height: 36px;
   --btn-radius-pill: 999px;
   --btn-radius-soft: 10px;
   --btn-radius-round: 50%;
@@ -122,7 +122,6 @@ html {
   --catalog-overlay-active-transition-duration: 1000ms;
   --catalog-overlay-active-transition-easing: ease;
   --catalog-overlay-card-active-opacity: 0;
-  --catalog-overlay-map-active-opacity: 0;
   --catalog-map-tile-brightness: 0.9;
 
   /* Dividers */
@@ -131,7 +130,6 @@ html {
 
   /* Layout */
   --header-height: 57px;
-  --content-max-width: 1128px;
   --page-gutter-desktop: 2rem;
   --page-gutter-mobile: 1rem;
   --page-gutter: var(--page-gutter-desktop);
@@ -333,9 +331,6 @@ input, select, textarea, button {
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  :root {
-    --page-gutter: var(--page-gutter-mobile);
-  }
 
   h1 { font-size: 1.75rem; }
   h2 { font-size: 1.4rem; }
@@ -345,4 +340,11 @@ input, select, textarea, button {
 @media (max-width: 480px) {
   h1 { font-size: 1.5rem; }
   h2 { font-size: 1.25rem; }
+}
+
+
+@media (max-width: 640px) {
+  :root {
+    --page-gutter: var(--page-gutter-mobile);
+  }
 }
